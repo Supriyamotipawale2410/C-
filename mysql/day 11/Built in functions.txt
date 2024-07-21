@@ -1,0 +1,863 @@
+
+Exception Handling:
+~~~~~~~~~~~~~~~~~~~
+=> Exceptions means runtime errors.
+=> Handling these runtime errors inside program is called as exception handling.
+=> we can handle the exception in mysql by using the following syntax.
+
+syntax
+------
+        DECLARE [continue|exit] HANDLER for [CODE|NAME]
+        BEGIN
+            -------------
+            -------------
+        END;
+
+
+Example1:
+---------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exceptionEx1`()
+BEGIN
+        select 'pro exe started...';
+        select * from emp;
+        select 'pro exe ended.....';
+END
+
+mysql> call exceptionex1();
++--------------------+
+| pro exe started... |
++--------------------+
+| pro exe started... |
++--------------------+
+1 row in set (0.00 sec)
+
++------+---------+--------+------------+
+| id   | name    | salary | doj        |
++------+---------+--------+------------+
+|    1 | Prakash |   9000 | 2024-01-01 |
+|    2 | Kalyan  |  10000 | 2023-01-04 |
+|    3 | Kiran   |   9900 | 2022-02-22 |
++------+---------+--------+------------+
+3 rows in set (0.00 sec)
+
++--------------------+
+| pro exe ended..... |
++--------------------+
+| pro exe ended..... |
++--------------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+Example2:
+---------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exceptionEx1`()
+BEGIN
+        select 'pro exe started...';
+        select * from empp;
+        select 'pro exe ended.....';
+END
+
+mysql> call exceptionex1();
++--------------------+
+| pro exe started... |
++--------------------+
+| pro exe started... |
++--------------------+
+1 row in set (0.00 sec)
+
+ERROR 1146 (42S02): Table 'prakash.empp' doesn't exist
+
+Example3:
+---------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exceptionEx1`()
+BEGIN
+        DECLARE continue HANDLER for 1146
+        BEGIN
+            select 'Check your table name...';
+        END;
+        select 'pro exe started...';
+        select * from empp;
+        select 'pro exe ended.....';
+END
+
+mysql> call exceptionex1();
++--------------------+
+| pro exe started... |
++--------------------+
+| pro exe started... |
++--------------------+
+1 row in set (0.00 sec)
+
++--------------------------+
+| Check your table name... |
++--------------------------+
+| Check your table name... |
++--------------------------+
+1 row in set (0.01 sec)
+
++--------------------+
+| pro exe ended..... |
++--------------------+
+| pro exe ended..... |
++--------------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+Example4:
+---------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exceptionEx1`()
+BEGIN
+        DECLARE exit HANDLER for 1146
+        BEGIN
+            select 'Check your table name...';
+        END;
+        select 'pro exe started...';
+        select * from empp;
+        select 'pro exe ended.....';
+END
+
+mysql> call exceptionex1();
++--------------------+
+| pro exe started... |
++--------------------+
+| pro exe started... |
++--------------------+
+1 row in set (0.00 sec)
+
++--------------------------+
+| Check your table name... |
++--------------------------+
+| Check your table name... |
++--------------------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+
+https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html
+
+Example5:
+---------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exceptionEx1`()
+BEGIN
+        DECLARE exit HANDLER for 1146
+        BEGIN
+            select 'Check your table name...';
+        END;
+        select 'pro exe started...';
+        select name,sal from emp;
+        select 'pro exe ended.....';
+END
+
+mysql> call exceptionex1();
++--------------------+
+| pro exe started... |
++--------------------+
+| pro exe started... |
++--------------------+
+1 row in set (0.00 sec)
+
+ERROR 1054 (42S22): Unknown column 'sal' in 'field list'
+
+Exampl6:
+--------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `exceptionEx1`()
+BEGIN
+        DECLARE continue HANDLER for 1146
+        BEGIN
+            select 'Check your table name...';
+        END;
+        DECLARE continue HANDLER for 1054
+        BEGIN
+            select 'Check your column name...';
+        END;
+        select 'pro exe started...';
+        select name,sal from emp;
+        select 'pro exe ended.....';
+END
+
+mysql> call exceptionex1();
++--------------------+
+| pro exe started... |
++--------------------+
+| pro exe started... |
++--------------------+
+1 row in set (0.00 sec)
+
++---------------------------+
+| Check your column name... |
++---------------------------+
+| Check your column name... |
++---------------------------+
+1 row in set (0.01 sec)
+
++--------------------+
+| pro exe ended..... |
++--------------------+
+| pro exe ended..... |
++--------------------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+Example7:
+---------
+mysql> select * from payments;
+Empty set (0.00 sec)
+
+mysql> select * from fraud;
+Empty set (0.00 sec)
+
+mysql> desc payments;
++-----------+------+------+-----+---------+-------+
+| Field     | Type | Null | Key | Default | Extra |
++-----------+------+------+-----+---------+-------+
+| client_id | int  | YES  |     | NULL    |       |
+| amount    | int  | NO   |     | NULL    |       |
++-----------+------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> desc fraud;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| id        | int         | NO   | PRI | NULL    | auto_increment |
+| client_id | int         | YES  |     | NULL    |                |
+| message   | varchar(50) | YES  |     | NULL    |                |
+| tot       | datetime    | YES  |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `makePayment`(cid int,amt int)
+BEGIN
+        insert into payments values(cid,amt);
+END
+
+mysql> call makePayment(222,null);
+ERROR 1048 (23000): Column 'amount' cannot be null
+mysql>
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `makePayment`(cid int,amt int)
+BEGIN
+        DECLARE CONTINUE HANDLER FOR 1048
+        BEGIN
+            insert into fraud(client_id,message,tot)
+            values(cid,'Invalid Trans...',now());
+        END;
+        insert into payments values(cid,amt);
+END
+
+mysql> call makePayment(222,7800);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> call makePayment(333,9800);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> call makePayment(444,null);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from payments;
++-----------+--------+
+| client_id | amount |
++-----------+--------+
+|       111 |   9000 |
+|       222 |   7800 |
+|       333 |   9800 |
++-----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from fraud;
++----+-----------+------------------+---------------------+
+| id | client_id | message          | tot                 |
++----+-----------+------------------+---------------------+
+|  3 |       444 | Invalid Trans... | 2024-05-16 21:32:55 |
++----+-----------+------------------+---------------------+
+1 row in set (0.00 sec)
+
+cursors:
+--------
+it is pointer which is always pointing to some record in table
+
+based on per ---> grade of student 'A' or 'B' or 'C' or 'D'
+
+steps to create cursors in mysql
+--------------------------------
+1. declaration of cursor
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Before using any cursor, we have to declare that cursor.
+
+syntax: DECLARE <curName> CURSOR for SELECT <col>,<col> from <tblName>;
+
+Example: DECLARE mycur CURSOR for select id,name,per from student;
+
+2. open the cursor
+~~~~~~~~~~~~~~~~~~
+we have to open the cursor by using the following syntax
+
+syntax: OPEN <curName>;
+
+Example: OPEN mycur;
+
+3. fetch the records 
+~~~~~~~~~~~~~~~~~~~~
+if we want to fetch the records one by one from cursor we have to use the following syntax
+
+syntax: FETCH <curName> into <varName>,<varName>.....;
+
+Example: FETCH mycur into a,b,c;
+
+4. closing cursor
+~~~~~~~~~~~~~~~~~
+if we performed all our operations, then we have to close the cursor.
+
+syntax: CLOSE <curName>;
+
+Example: CLOSE mycur;
+
+Example1:
+---------
+mysql> select * from emp;
++------+---------+--------+------------+
+| id   | name    | salary | doj        |
++------+---------+--------+------------+
+|    1 | Prakash |   9000 | 2024-01-01 |
+|    2 | Kalyan  |  10000 | 2023-01-04 |
+|    3 | Kiran   |   9900 | 2022-02-22 |
++------+---------+--------+------------+
+3 rows in set (0.00 sec)
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `curDemo1`()
+BEGIN
+    declare a int;
+    declare b varchar(20);
+    declare c double;
+    declare fetch_complete int default 0;
+    declare mycur cursor for select id,name,salary from emp;
+    declare continue handler for NOT FOUND set fetch_complete = 1;
+    open mycur;
+    L: loop
+            fetch mycur into a,b,c;
+            if fetch_complete=1 then
+                leave L;
+            end if;
+            select a,b,c;
+    end loop L;
+    close mycur;
+END
+
+mysql> call curDemo1();
++------+---------+------+
+| a    | b       | c    |
++------+---------+------+
+|    1 | Prakash | 9000 |
++------+---------+------+
+1 row in set (0.00 sec)
+
++------+--------+-------+
+| a    | b      | c     |
++------+--------+-------+
+|    2 | Kalyan | 10000 |
++------+--------+-------+
+1 row in set (0.01 sec)
+
++------+-------+------+
+| a    | b     | c    |
++------+-------+------+
+|    3 | Kiran | 9900 |
++------+-------+------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+Example2: create cursor to fetch & concat all names of emp?
+-----------------------------------------------------------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `curDemo2`()
+BEGIN
+    declare a varchar(20);
+    declare res varchar(255) default "";
+    declare done int default 0;
+    declare mycur cursor for select name from emp;
+    declare continue handler for NOT FOUND set done = 1;
+    open mycur;
+    L: loop
+            fetch mycur into a;
+            if done=1 then
+                leave L;
+            end if;
+            set res = concat(res,a,", ");
+    end loop L;
+    select res as 'Names';
+    close mycur;
+END
+
+mysql> call curDemo2();
++--------------------------+
+| Names                    |
++--------------------------+
+| Prakash, Kalyan, Kiran,  |
++--------------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+mysql> create table emp(id int,name varchar(255),gender char(6),sal double);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> insert into emp values
+    -> (1,'AAA','male',1000),
+    -> (2,'BBB','male',2000),
+    -> (3,'CCC','female',3000),
+    -> (4,'DDD','male',4000),
+    -> (5,'EEE','male',5000),
+    -> (6,'FFF','female',6000),
+    -> (7,'GGG','female',7000);
+Query OK, 7 rows affected (0.02 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from emp;
++------+------+--------+------+
+| id   | name | gender | sal  |
++------+------+--------+------+
+|    1 | AAA  | male   | 1000 |
+|    2 | BBB  | male   | 2000 |
+|    3 | CCC  | female | 3000 |
+|    4 | DDD  | male   | 4000 |
+|    5 | EEE  | male   | 5000 |
+|    6 | FFF  | female | 6000 |
+|    7 | GGG  | female | 7000 |
++------+------+--------+------+
+7 rows in set (0.00 sec)
+
+Example3: create a cur to dump the data into temp table
+-------------------------------------------------------
+mysql> select * from emp;
++------+------+--------+------+
+| id   | name | gender | sal  |
++------+------+--------+------+
+|    1 | AAA  | male   | 1000 |
+|    2 | BBB  | male   | 2000 |
+|    3 | CCC  | female | 3000 |
+|    4 | DDD  | male   | 4000 |
+|    5 | EEE  | male   | 5000 |
+|    6 | FFF  | female | 6000 |
+|    7 | GGG  | female | 7000 |
++------+------+--------+------+
+7 rows in set (0.00 sec)
+
+mysql> select * from emptemp1;
+Empty set (0.00 sec)
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `curDemo3`()
+BEGIN
+        declare a int;
+        declare b varchar(255);
+        declare c char(6);
+        declare d double;
+        declare done int default 0;
+        declare mycur cursor for select id,name,gender,sal from emp;
+        declare continue handler for NOT FOUND set done=1;
+        open mycur;
+        L: loop
+            fetch mycur into a,b,c,d;
+            insert into emptemp1 values(a,b,c,d);
+            if done=1 then
+                leave L;
+            end if;
+        end loop L;
+        close mycur;
+END
+
+mysql> call curDemo3();
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> select * from emptemp1;
++------+------+--------+------+
+| id   | name | gender | sal  |
++------+------+--------+------+
+|    1 | AAA  | male   | 1000 |
+|    2 | BBB  | male   | 2000 |
+|    3 | CCC  | female | 3000 |
+|    4 | DDD  | male   | 4000 |
+|    5 | EEE  | male   | 5000 |
+|    6 | FFF  | female | 6000 |
+|    7 | GGG  | female | 7000 |
++------+------+--------+------+
+7 rows in set (0.00 sec)
+
+Example:
+--------
+CREATE DEFINER=`root`@`localhost` PROCEDURE `curDemo4`()
+BEGIN
+        declare a int;
+        declare b varchar(255);
+        declare c char(6);
+        declare d double;
+        declare done int default 0;
+        declare mycur cursor for select id,name,gender,sal from emp;
+        declare continue handler for NOT FOUND set done=1;
+        open mycur;
+        L: loop
+            fetch mycur into a,b,c,d;
+            if done=1 then
+                leave L;
+            end if;
+            if c='male' then
+                insert into emptemp2 values(a,b,c,d);
+            end if;
+        end loop L;
+        close mycur;
+END
+
+mysql> select * from emptemp2;
+Empty set (0.00 sec)
+
+mysql> call curDemo4();
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> select * from emptemp2;
++------+------+--------+------+
+| id   | name | gender | sal  |
++------+------+--------+------+
+|    1 | AAA  | male   | 1000 |
+|    2 | BBB  | male   | 2000 |
+|    4 | DDD  | male   | 4000 |
+|    5 | EEE  | male   | 5000 |
++------+------+--------+------+
+4 rows in set (0.00 sec)
+=====================================================================================================
+======================================================================================
+
+MYSQL WINDOW FUNCTIONS:
+-----------------------
+mysql> select * from sales;
++----------------+-------------+--------+
+| sales_employee | fiscal_year | sale   |
++----------------+-------------+--------+
+| Alice          |        2016 | 150.00 |
+| Alice          |        2017 | 100.00 |
+| Alice          |        2018 | 200.00 |
+| Bob            |        2016 | 100.00 |
+| Bob            |        2017 | 150.00 |
+| Bob            |        2018 | 200.00 |
+| John           |        2016 | 200.00 |
+| John           |        2017 | 150.00 |
+| John           |        2018 | 250.00 |
++----------------+-------------+--------+
+9 rows in set (0.04 sec)
+
+mysql> select
+    -> sum(sale)
+    -> from sales;
++-----------+
+| sum(sale) |
++-----------+
+|   1500.00 |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select
+    -> fiscal_year,sum(sale)
+    -> from sales
+    -> GROUP BY fiscal_year;
++-------------+-----------+
+| fiscal_year | sum(sale) |
++-------------+-----------+
+|        2016 |    450.00 |
+|        2017 |    400.00 |
+|        2018 |    650.00 |
++-------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select fiscal_year,sales_employee,sale,
+    -> sum(sale) OVER(PARTITION BY fiscal_year) TOTAL_SALES
+    -> from sales;
++-------------+----------------+--------+-------------+
+| fiscal_year | sales_employee | sale   | TOTAL_SALES |
++-------------+----------------+--------+-------------+
+|        2016 | Alice          | 150.00 |      450.00 |
+|        2016 | Bob            | 100.00 |      450.00 |
+|        2016 | John           | 200.00 |      450.00 |
+|        2017 | Alice          | 100.00 |      400.00 |
+|        2017 | Bob            | 150.00 |      400.00 |
+|        2017 | John           | 150.00 |      400.00 |
+|        2018 | Alice          | 200.00 |      650.00 |
+|        2018 | Bob            | 200.00 |      650.00 |
+|        2018 | John           | 250.00 |      650.00 |
++-------------+----------------+--------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> select fiscal_year,sales_employee,sale,
+    -> rank() OVER(PARTITION BY fiscal_year ORDER BY sale DESC) Sales_Rank
+    -> from sales;
++-------------+----------------+--------+------------+
+| fiscal_year | sales_employee | sale   | Sales_Rank |
++-------------+----------------+--------+------------+
+|        2016 | John           | 200.00 |          1 |
+|        2016 | Alice          | 150.00 |          2 |
+|        2016 | Bob            | 100.00 |          3 |
+|        2017 | Bob            | 150.00 |          1 |
+|        2017 | John           | 150.00 |          1 |
+|        2017 | Alice          | 100.00 |          3 |
+|        2018 | John           | 250.00 |          1 |
+|        2018 | Alice          | 200.00 |          2 |
+|        2018 | Bob            | 200.00 |          2 |
++-------------+----------------+--------+------------+
+9 rows in set (0.00 sec)
+
+
+
+TRIGGERS:
+---------
+It is already existing function / procedure which fires automatically when we are perfomring Insert, Update or Delete operation.
+
+syntax:
+-------
+
+CREATE TRIGGER <trigger_name>
+[BEFORE | AFTER] [INSERT|DELETE|UPDATE]
+on <tbl_name>
+for each row
+BEGIN
+    ----------------
+    ----------------
+    ----------------
+END;
+
+Example:
+--------
+mysql> desc items;
++-------+---------------+------+-----+---------+-------+
+| Field | Type          | Null | Key | Default | Extra |
++-------+---------------+------+-----+---------+-------+
+| id    | int           | NO   | PRI | NULL    |       |
+| name  | varchar(255)  | NO   |     | NULL    |       |
+| price | decimal(10,2) | NO   |     | NULL    |       |
++-------+---------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc item_changes;
++------------------+-------------+------+-----+-------------------+-------------------+
+| Field            | Type        | Null | Key | Default           | Extra             |
++------------------+-------------+------+-----+-------------------+-------------------+
+| change_id        | int         | NO   | PRI | NULL              | auto_increment    |
+| item_id          | int         | YES  | MUL | NULL              |                   |
+| change_type      | varchar(10) | YES  |     | NULL              |                   |
+| change_timestamp | timestamp   | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++------------------+-------------+------+-----+-------------------+-------------------+
+4 rows in set (0.01 sec)
+
+
+mysql> select * from items;
++-----+--------+-------+
+| id  | name   | price |
++-----+--------+-------+
+| 111 | Coffee | 21.50 |
++-----+--------+-------+
+1 row in set (0.11 sec)
+
+mysql> select * from item_changes;
++-----------+---------+-------------+---------------------+
+| change_id | item_id | change_type | change_timestamp    |
++-----------+---------+-------------+---------------------+
+|         2 |     111 | Update      | 2024-05-15 07:44:19 |
+|         3 |     111 | Update      | 2024-05-15 07:45:31 |
++-----------+---------+-------------+---------------------+
+2 rows in set (0.03 sec)
+
+mysql> delimiter //
+mysql> create trigger tp1
+    -> after insert
+    -> on items
+    -> for each row
+    -> begin
+    -> insert into item_changes(item_id,change_type) values(NEW.id,'Insert');
+    -> end //
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> delimiter ;
+mysql>
+
+mysql> insert into items values(222,'Tea',10.45);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from items;
++-----+--------+-------+
+| id  | name   | price |
++-----+--------+-------+
+| 111 | Coffee | 21.50 |
+| 222 | Tea    | 10.45 |
++-----+--------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select * from item_changes;
++-----------+---------+-------------+---------------------+
+| change_id | item_id | change_type | change_timestamp    |
++-----------+---------+-------------+---------------------+
+|         2 |     111 | Update      | 2024-05-15 07:44:19 |
+|         3 |     111 | Update      | 2024-05-15 07:45:31 |
+|         4 |     222 | Insert      | 2024-05-21 21:35:20 |
++-----------+---------+-------------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> update items set price=15.00 where name='tea';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from item_changes;
++-----------+---------+-------------+---------------------+
+| change_id | item_id | change_type | change_timestamp    |
++-----------+---------+-------------+---------------------+
+|         2 |     111 | Update      | 2024-05-15 07:44:19 |
+|         3 |     111 | Update      | 2024-05-15 07:45:31 |
+|         4 |     222 | Insert      | 2024-05-21 21:35:20 |
+|         5 |     222 | Update      | 2024-05-21 21:36:36 |
++-----------+---------+-------------+---------------------+
+4 rows in set (0.00 sec)
+
+Example:
+--------
+mysql> create table student(id int,name varchar(255));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> set @studentCount=0;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> create trigger trig1 before insert on student for each row
+    -> set @studentCount=@studentCount+1;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select @studentCount;
++---------------+
+| @studentCount |
++---------------+
+|             0 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> insert into student values(1,'AAA');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into student values(2,'AAA');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into student values(3,'AAA');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select @studentCount;
++---------------+
+| @studentCount |
++---------------+
+|             3 |
++---------------+
+1 row in set (0.00 sec)
+
+
+mysql subqueries:
+-----------------
+subquery is a query within another query.
+it contains select, insert, update or delete.
+subquery is an inner query which is inserted inside outer query.
+
+Examples:
+---------
+
+select lastname,firstname from employees
+
+where officeCode IN (select officeCode from offices where country='USA');
+
+
+Example:
+--------
+mysql> desc payments;
++----------------+---------------+------+-----+---------+-------+
+| Field          | Type          | Null | Key | Default | Extra |
++----------------+---------------+------+-----+---------+-------+
+| customerNumber | int           | NO   | PRI | NULL    |       |
+| checkNumber    | varchar(50)   | NO   | PRI | NULL    |       |
+| paymentDate    | date          | NO   |     | NULL    |       |
+| amount         | decimal(10,2) | NO   |     | NULL    |       |
++----------------+---------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc orders;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| orderNumber    | int         | NO   | PRI | NULL    |       |
+| orderDate      | date        | NO   |     | NULL    |       |
+| requiredDate   | date        | NO   |     | NULL    |       |
+| shippedDate    | date        | YES  |     | NULL    |       |
+| status         | varchar(15) | NO   |     | NULL    |       |
+| comments       | text        | YES  |     | NULL    |       |
+| customerNumber | int         | NO   | MUL | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+7 rows in set (0.01 sec)
+
+mysql> select * from payments limit 10;
++----------------+-------------+-------------+----------+
+| customerNumber | checkNumber | paymentDate | amount   |
++----------------+-------------+-------------+----------+
+|            103 | HQ336336    | 2004-10-19  |  6066.78 |
+|            103 | JM555205    | 2003-06-05  | 14571.44 |
+|            103 | OM314933    | 2004-12-18  |  1676.14 |
+|            112 | BO864823    | 2004-12-17  | 14191.12 |
+|            112 | HQ55022     | 2003-06-06  | 32641.98 |
+|            112 | ND748579    | 2004-08-20  | 33347.88 |
+|            114 | GG31455     | 2003-05-20  | 45864.03 |
+|            114 | MA765515    | 2004-12-15  | 82261.22 |
+|            114 | NP603840    | 2003-05-31  |  7565.08 |
+|            114 | NR27552     | 2004-03-10  | 44894.74 |
++----------------+-------------+-------------+----------+
+10 rows in set (0.00 sec)
+
+Example: select the customer who has the highest payment
+--------------------------------------------------------
+mysql> select
+    -> CustomerNumber,CheckNumber,amount
+    -> from payments
+    -> where amount = (select max(amount) from payments);
++----------------+-------------+-----------+
+| CustomerNumber | CheckNumber | amount    |
++----------------+-------------+-----------+
+|            141 | JE105477    | 120166.58 |
++----------------+-------------+-----------+
+1 row in set (0.00 sec)
+
+Example:
+--------
+mysql> select
+    -> CustomerNumber,CheckNumber,amount
+    -> from payments
+    -> where amount = (select min(amount) from payments);
++----------------+-------------+--------+
+| CustomerNumber | CheckNumber | amount |
++----------------+-------------+--------+
+|            398 | JPMR4544    | 615.45 |
++----------------+-------------+--------+
+1 row in set (0.00 sec)
+
+Example:
+--------
+mysql> select
+    -> CustomerNumber,CheckNumber,amount
+    -> from payments
+    -> where amount >= (select avg(amount) from payments);
++----------------+-------------+-----------+
+| CustomerNumber | CheckNumber | amount    |
++----------------+-------------+-----------+
+|            112 | HQ55022     |  32641.98 |
+|            112 | ND748579    |  33347.88 |
+|            114 | GG31455     |  45864.03 |
+|            114 | MA765515    |  82261.22 |
+|            114 | NR27552     |  44894.74 |
+|            119 | LN373447    |  47924.19 |
+|            119 | NG94694     |  49523.67 |
+|            121 | DB889831    |  50218.95 |
+|            121 | MA302151    |  34638.14 |
+|            124 | AE215433    | 101244.59 |
+|            124 | BG255406    |  85410.87 |
+

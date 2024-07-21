@@ -1,0 +1,219 @@
+//create new user
+mysql> create user pqrs@localhost identified by '1234';
+Query OK, 0 rows affected (0.08 sec)
+
+=================================================
+we can connect new user to db
+
+
+C:\Users\Prakash>mysql -u pqrs -p
+Enter password: ****
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 48
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| performance_schema |
++--------------------+
+2 rows in set (0.01 sec)
+==========================================================================
+GRANT Statement
+
+The grant statement enables system administrators to assign privileges and roles to the MySQL user accounts so that they can use the assigned permission on the database whenever required.
+
+mysql> show grants for pqrs@localhost;
++------------------------------------------+
+| Grants for pqrs@localhost                |
++------------------------------------------+
+| GRANT USAGE ON *.* TO `pqrs`@`localhost` |
++------------------------------------------+
+1 row in set (0.00 sec)
+===========================================================
+====================================================
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| performance_schema |
++--------------------+
+2 rows in set (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| performance_schema |
+| zzz                |
++--------------------+
+3 rows in set (0.01 sec)
+
+mysql> use zzz;
+Database changed
+mysql> show tables;
++---------------+
+| Tables_in_zzz |
++---------------+
+| student       |
++---------------+
+1 row in set (0.01 sec)
+
+mysql> select * from student;
++------+------+
+| id   | name |
++------+------+
+|    1 | AAA  |
+|    2 | AAA  |
+|    3 | AAA  |
++------+------+
+3 rows in set (0.00 sec)
+================================================
+
+
+mysql> grant select on zzz.student to pqrs@localhost;
+Query OK, 0 rows affected (0.01 sec)
+
+
+
+mysql> insert into student values(2,'BBB');
+ERROR 1142 (42000): INSERT command denied to user 'pqrs'@'localhost' for table 'student'
+
+mysql> grant insert on zzz.student to pqrs@localhost;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into student values(2,'BBB');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from student;
++------+------+
+| id   | name |
++------+------+
+|    1 | AAA  |
+|    2 | AAA  |
+|    3 | AAA  |
+|    2 | BBB  |
++------+------+
+4 rows in set (0.00 sec)
+
+mysql> revoke insert on zzz.student from pqrs@localhost;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into student values(3,'CCC');
+ERROR 1142 (42000): INSERT command denied to user 'pqrs'@'localhost' for table 'student'
+mysql>
+
+==================================================
+Global 	GRANT ALL
+ON *.*
+TO john@localhost; 	It applies to all databases on MySQL server. We need to use *.* syntax for applying global privileges. Here, the user can query data from all databases and tables of the current server.
+Database 	GRANT ALL
+ON mydb.*
+TO john@localhost; 	It applies to all objects in the current database. We need to use the db_name.* syntax for applying this privilege. Here, a user can query data from all tables in the given database.
+Table 	GRANT DELETE
+ON mydb.employees
+TO john@localhsot; 	It applies on all columns in a specified table. We need to use db_name.table_name syntax for assigning this privilege. Here, a user can query data from the given table of the specified database.
+Column 	GRANT SELECT (col1), INSERT (col1, col2), UPDATE (col2)
+ON mydb.mytable
+TO john@localhost; 	It applies on a single column of a table. Here, we must have to specify the column(s) name enclosed with parenthesis for each privilege. The user can select one column, insert values in two columns, and update only one column in the given table.
+Stored Routine 	GRANT EXECUTE
+ON PROCEDURE mydb.myprocedure
+TO john@localhost; 	It applies to stored routines (procedure and functions). It contains CREATE ROUTINE, ALTER ROUTINE, EXECUTE, and GRANT OPTION privileges. Here, a user can execute the stored procedure in the current database.
+Proxy 	GRANT PROXY
+ON root
+TO peter@localhost; 	It enables one user to be a proxy for other users.
+
+
+Let us understand the GRANT privileges through the example. First, we need to create a new user named "john@localhost" using the following statement:
+
+    mysql> CREATE USER john@localhost IDENTIFIED BY 'jtp12345';  
+
+Next, execute the SHOW GRANT statement to check the privileges assigned to john@localhost using the following query:
+
+    mysql> SHOW GRANTS FOR john@localhost;  
+===================================================
+It will give the below output. Here, the USAGE means a user can log in to the database but does not have any privileges.
+-===============================================
+If we want to assign all privileges to all databases in the current server to john@localhost, execute the below statement:
+
+    mysql> GRANT ALL ON mystudentdb.* TO john@localhost;  
+
+Again, execute the SHOW GRANT statement to verify the privileges. 
+After the successful execution,  Here all privileges are assigned to all databases in the current server to john@localhost.
+=======================================================
+We can choose access right from the below list on which privileges can be applied.
+
+    SELECT: It enables us to view the result set from a specified table.
+    INSERT: It enables us to add records in a given table.
+    DELETE: It enables us to remove rows from a table.
+    CREATE: It enables us to create tables/schemas.
+    ALTER: It enables us to modify tables/schemas.
+    UPDATE: It enables us to modify a table.
+    DROP: It enables us to drop a table.
+    INDEX: It enables us to create indexes on a table.
+    ALL: It enables us to give ALL permissions except GRANT privilege.
+    GRANT: It enables us to change or add access rights.
+
+===========================================================================
+REVOKE Statement
+
+The revoke statement enables system administrators to revoke privileges and roles to the MySQL user accounts so that they cannot use the assigned permission on the database in the past.
+Syntax
+
+The following are the basic syntax of using the REVOKE statement:
+
+    REVOKE privilege_name(s)   
+    ON object   
+    FROM user_account_name;  
+
+If we want to revoke all privileges assign to the user, execute the following statement:
+
+    mysql> REVOKE ALL, GRANT OPTION FROM john@localhost;  
+================================================================
+We can revoke privileges from the below list on which privileges can be applied.
+
+    CREATE: It enables the user account to create databases and tables.
+    DROP: It allows the user account to drop databases and tables.
+    DELETE: It enables the user account to delete rows from a specific table.
+    INSERT: It allows the user account to insert rows into a specific table.
+    SELECT: It enables the user account to read a database.
+    UPDATE: It enables the user account to update table rows.
+
+=======================================================
+
+mysql> use mysql27;
+Database changed
+
+mysql> create user aaa@localhost identified by 'welcome';
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> grant select on mysql27.product to aaa@localhost;
+Query OK, 0 rows affected (0.00 sec)
+===============================================================
+//connection
+show database;
+mysql> use mysql27;
+Database changed
+mysql> select * from product;
+
+
+//mysql> insert into product values(2,'ff',44,55);
+ERROR 1142 (42000): INSERT command denied to user 'aaa'@'localhost' for table 'product'
+==================================================================
+grant insert,update  on mysql27.product to aaa@localhost;
+==============================================
+ insert into product values(2,'ff',44,55);
+
+============================================================

@@ -1,0 +1,118 @@
+Self Join
+==>joining a table by itself is called self join
+==>comparing a table data by itself  is called as self join
+==>one table is comparing with itself can takes place with the help of alias name.
+
+Basic Rules
+==>we can perform operations on single table
+==>when we use self join we should create alias names on a table otherwise we cannot implement 
+self join. 
+==>we can create as many as alias for single table but every alias name should be different.
+emp e1,emp e2,emp e3
+==>on which table we creates alias,system will generate a virtual table(xerox copy) internally on each alias name of the table.
+==>virtual means same as mirror images
+
+purpose of self join
+
+case 1: comparing a single column values by itself within the tables
+
+WAQ TO DISPLAY EMPLOYEE WHO ARE WORKING IN THE SAME LOCATION THE EMPLOYEE 'SMITH' IS ALSO WORKING
+
+ create table Test(ename varchar(20),loc varchar(20));
+ insert into Test values('smith','hyd'),('allen','mumbai'),('jones','hyd'),('ward','chennai');
+
+select * from test;
++-------+---------+
+| ename | loc     |
++-------+---------+
+| smith | hyd     |
+| allen | mumbai  |
+| jones | hyd     |
+| ward  | chennai |
++-------+---------+
+
+select * from test where ename='smith';
+===================================================
+select * from Test T1,Test T2 where T1.loc=T2.loc;
+
++-------+---------+-------+---------+
+| ename | loc     | ename | loc     |
++-------+---------+-------+---------+
+| jones | hyd     | smith | hyd     |
+| smith | hyd     | smith | hyd     |
+| allen | mumbai  | allen | mumbai  |
+| jones | hyd     | jones | hyd     |
+| smith | hyd     | jones | hyd     |
+| ward  | chennai | ward  | chennai |
++-------+---------+-------+---------+
+comparing single column value by itself
+
+ select * from Test T1,Test T2 where T1.loc=T2.loc and ename='smith';
+ERROR 1052 (23000): Column 'ename' in where clause is ambiguous
+//ename want to take from which alias name T1 or T2
+
+select * from Test T1,Test T2 where T1.loc=T2.loc and T1.ename='smith';
++-------+------+-------+------+
+| ename | loc  | ename | loc  |
++-------+------+-------+------+
+| smith | hyd  | smith | hyd  |
+| smith | hyd  | jones | hyd  |
++-------+------+-------+------+
+
+mysql> select * from Test T1,Test T2 where T1.loc=T2.loc and T2.ename='smith';
++-------+------+-------+------+
+| ename | loc  | ename | loc  |
++-------+------+-------+------+
+| smith | hyd  | smith | hyd  |
+| jones | hyd  | smith | hyd  |
++-------+------+-------+------+
+
+mysql> select T1.ENAME,T1.LOC from Test T1,Test T2 where T1.loc=T2.loc and T2.ename='smith';
++-------+------+
+| ENAME | LOC  |
++-------+------+
+| smith | hyd  |
+| jones | hyd  |
++-------+------+
+
+NOTE:WHICH ALIAS DATA YOU ARE DISPLAYING, IN THE FILTERING CONDITION DONT USE SAME ALIAS NAME,OTHERWISE DUPLICATE DATA WILL COME
+==>SELECTED COLUMS AND  CONDITIONAL COLUMN SHOULD NOT BE FROM SAME ALIAS.
+==================================================================================================
+QUERY 2:
+WAQ TO DIPSLAY EMPLOYEES WHOSE SALARY IS SAME AS THE EMPLOYEE lex SALARY
+
+non ansi ==>select T1.first_name,T1.salary from
+ myemp T1,myemp T2 where T1.salary=T2.salary and T2.first_name='lex';
+
+ansi==>mysql> select T1.first_name,T1.salary from myemp T1 join myemp T2 on T1.salary=T2.salary and T2.first_name='lex'; 
+==================================================================
+case 2:comparing two different columns values to each other within the table.
+===============================================
+waq to display managers and their employees?
+
+use mysql21;
+==>select M.LASTNAME MANAGER,E.LASTname EMPLOYEE
+ from employees m, employeeS  e  
+WHERE M.employeenumber=E.reportSto;
+
+==> select E.LASTNAME MANAGER,M.LASTname EMPLOYEE from employees E, employeeS  M  WHERE E.employeenumber=M.reportSto;
+====================================================================================================
+waq to display employees who joined before their managers?
+//use mysql21
+ select E.first_name MANAGER,E.hire_date hiredate,M.first_name EMPLOYEE,m.hire_date hiredate
+ from myemp E, myemp  M  
+WHERE E.emp_id=m.mgr_id and 
+E.hire_date>M.hire_date;
+
+
+==========================================================================================================
+waq to display employees whose salary is greater than salary of manager
+select E.first_name MANAGER,E.salary salary,M.first_name EMPLOYEE,m.salary salary 
+from myemp E, myemp  M  
+WHERE E.emp_id=m.mgr_id and E.salary < m. salary;
+
+
+
+
+
+

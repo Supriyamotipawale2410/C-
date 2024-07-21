@@ -1,0 +1,255 @@
+
+What is table/Relation?
+==>Relation(R) : In database,a relation represents table 
+
+Everything in a relational database is stored in the form of relations. The RDBMS database uses tables to store data. A table is a collection of related data entries and contains rows and columns to store data. Each table represents some real-world objects such as person, place, or event about which information is collected. The organized collection of data into a relational table is known as the logical view of the database.
+
+Properties of a Relation:
+
+Each relation has a unique name by which it is identified in the database.
+Relation does not contain duplicate tuples.
+The tuples of a relation have no specific order.
+All attributes in a relation are atomic, i.e., each cell of a relation contains exactly one value.
+
+A table is the simplest example of data stored in RDBMS.
+
+Let's see the example of the student table.
+
+ID	Name	AGE	COURSE
+1	Ajeet	24	B.Tech
+2	aryan	20	C.A
+3	Mahesh	21	BCA
+=======================================================
+What is a row or record?
+A row of a table is also called a record or tuple. It contains the specific information of each entry in the table. It is a horizontal entity in the table. For example, The above table contains 5 records.
+
+Properties of a row:
+
+No two tuples are identical to each other in all their entries.
+All tuples of the relation have the same format and the same number of entries.
+The order of the tuple is irrelevant. They are identified by their content, not by their position.
+
+Let's see one record/row in the table.
+
+ID	Name	AGE	COURSE
+1	Ajeet	24	B.Tech
+
+========================================================
+What is a column/attribute?
+A column is a vertical entity in the table which contains all information associated with a specific field in a table. For example, "name" is a column in the above table which contains all information about a student's name.
+
+Properties of an Attribute:
+
+Every attribute of a relation must have a name.
+Null values are permitted for the attributes.
+Default values can be specified for an attribute automatically inserted if no other value is specified for an attribute.
+Attributes that uniquely identify each tuple of a relation are the primary key.
+
+Name
+Ajeet
+Aryan
+Mahesh
+Ratan
+Vimal
+==============================================
+What is data item/Cells?
+The smallest unit of data in the table is the individual data item. It is stored at the intersection of tuples and attributes.
+
+Properties of data items:
+
+Data items are atomic.
+The data items for an attribute should be drawn from the same domain.
+In the below example, the data item in the student table consists of Ajeet, 24 and Btech, etc.
+
+ID	Name	AGE	COURSE
+1	Ajeet	24	B.Tech
+============================================
+Degree:
+The total number of attributes that comprise a relation is known as the degree of the table.
+For example, the student table has 4 attributes, and its degree is 4.
+
+ID	Name	AGE	COURSE
+1	Ajeet	24	B.Tech
+2	aryan	20	C.A
+3	Mahesh	21	BCA
+4	Ratan	22	MCA
+5	Vimal	26	BSC
+==========================================
+Cardinality:
+The total number of tuples at any one time in a relation is known as the table's cardinality. The relation whose cardinality is 0 is called an empty table.
+
+For example, the student table has 5 rows, and its cardinality is 5.
+
+ID	Name	AGE	COURSE
+1	Ajeet	24	B.Tech
+2	aryan	20	C.A
+3	Mahesh	21	BCA
+4	Ratan	22	MCA
+5	Vimal	26	BSC
+======================================
+Domain:
+The domain refers to the possible values each attribute can contain. It can be specified using standard data types such as integers, floating numbers, etc. For example, An attribute entitled Marital_Status may be limited to married or unmarried values.
+
+NULL Values
+The NULL value of the table specifies that the field has been left blank during record creation. It is different from the value filled with zero or a field that contains space.
+Database tables also allow NULL values, that is if the values of any of the element of the table are not filled or are missing, it becomes a NULL value, which is not equivalent to zero. (NOTE: Primary key cannot have a NULL value).
+
+=================================================================
+
+
+What is relation and relationship?
+Relation(R) : In database,a relation represents table .
+Relationship:In database, relationship is that how the two entities are connected to each other ,i.e 
+what kind of relationship type they hold between them.
+==>primary/foreign key is used to specify this relationship.
+==>foreign key is also known as reference or referential key.
+
+Relation Schema:
+A relation schema represents name of the relation  with its attributes.
+eg:student(roll_no,name,address,phone,age) is relation schema for STUDENT.
+=========================================================================
+
+=============================================================================
+Entity Relationship Diagram(E-R diagram)
+
+1 An Entity–relationship model (ER model) describes the structure of a database with the help of a diagram, which is known as Entity Relationship Diagram (ER Diagram). An ER model is a design or blueprint of a database that can later be implemented as a database.
+2 It develops a conceptual design for the database. It also develops a very simple and easy to design view of data.
+In ER modeling, the database structure is portrayed as a diagram called an entity-relationship diagram. 
+
+ use E-R model to get a high level graphical view to describe
+the 'ENTITIES" and their 'RELATIONSHIP'
+
+==>The Entity Relational Model is a model for identifying entities to be represented in the database and representation of how those entities are related.
+The ER data model specifies enterprise schema that represents the overall logical structure of a database graphically. 
+
+The Entity Relationship Diagram explains the relationship among the entities present in the database. ER models are used to model real-world objects like a person, a car, or a company and the relation between these real-world objects.
+-------------------------------------------------------------------------------------
+Why Use ER Diagrams In DBMS?
+ER diagrams are used to represent the E-R model in a database, which makes them easy to be converted into relations (tables).
+ER diagrams provide the purpose of real-world modeling of objects which makes them intently useful.
+ER diagrams require no technical knowledge and no hardware support.
+These diagrams are very easy to understand and easy to create even for a naive user. 
+It gives a standard solution for visualizing the data logically.Why Use ER Diagrams In DBMS?
+
+----------------------------------------------------------------------------------------------------
+Symbols Used in ER Model:https://www.geeksforgeeks.org/introduction-of-er-model/
+ER Model is used to model the logical view of the system from a data perspective which consists of these symbols:
+
+Rectangles: Rectangles represent Entities in the ER Model.
+Ellipses: Ellipses represent Attributes in the ER Model.
+Diamond: Diamonds represent Relationships among Entities.
+Lines: Lines represent attributes to entities and entity sets with other relationship types.
+Double Ellipse: Double Ellipses represent Multi-Valued Attributes.
+Double Rectangle: Double Rectangle represents a Weak Entity.
+Dashed Ellipses: Derived Attributes
+
+-----------------------------------------------------------------------------
+For example, Suppose we design a school database. In this database, the student will be an entity with attributes like address, name, id, age, etc. The address can be another entity with attributes like city, street name, pin code, etc and there will be a relationship between them.
+
+diagram;https://www.javatpoint.com/dbms-er-model-concept
+
+-----------------------------------------------------------------------------------------
+Components of ER Diagram
+ER Diagram base on three basic concepts:Entity,Attributes,Relationship.
+
+Entity:
+==>An entity can be a real world object.
+==>An Entity may be an object with a physical existence – a particular person, car, house, or employee – or it may be an object with a conceptual existence – a company, a job, or a university course. 
+==>In the ER diagram, an entity can be represented as rectangles.
+
+Entity Set: An Entity is an object of Entity Type and a set of all entities is called an entity set. For Example, E1 is an entity having Entity Type Student and the set of all students is called Entity Set. In ER diagram, Entity Type is represented as: 
+https://www.geeksforgeeks.org/introduction-of-er-model/
+
+ex 2:Consider an organization as an example- manager, product, employee, department etc. can be taken as an entity.
+https://www.javatpoint.com/dbms-er-model-concept
+
+1. Strong Entity
+
+A Strong Entity is a type of entity that has a key Attribute. Strong Entity does not depend on other Entity in the Schema. It has a primary key, that helps in identifying it uniquely, and it is represented by a rectangle. These are called Strong Entity Types.
+
+2. Weak Entity
+An entity that depends on another entity called a weak entity. The weak entity doesn't contain any key attribute of its own. The weak entity is represented by a double rectangle.
+
+For Example, A company may store the information of dependents (Parents, Children, Spouse) of an Employee. But the dependents can’t exist without the employee. So Dependent will be a Weak Entity Type and Employee will be Identifying Entity type for Dependent, which means it is Strong Entity Type.
+
+A weak entity type is represented by a Double Rectangle. The participation of weak entity types is always total. The relationship between the weak entity type and its identifying strong entity type is called identifying relationship and it is represented by a double diamond. 
+
+DISGRAM FROM GREEK AND JAVATPOINT
+
+------------------------------------------------------------------------------
+Attributes:
+The attribute is used to describe the property of an entity. 
+For example, id, age, contact number, name, etc. can be attributes of a student.
+Attributes are the properties that defines a relation.
+An attribute is a property or characteristic of an entity. An entity may contain any number of attributes. One of the attributes is considered as the primary key. In an Entity-Relation model, attributes are represented in an elliptical shape. 
+
+Example: Student has attributes like name, age, roll number, and many more. To uniquely identify the student, we use the primary key as a roll number as it is not repeated. 
+
+==>In ER model,Attributes can be classified into the following types:
+1) Simple/Atomic (cant be divided further)
+2) Composite(can be divided further)
+3) Single-valued(only one value)
+4) Multi-valued(multiple values)
+5) Derived attribute(virtual)
+6) Complex Attribute(composite and multivalue)
+
+Key attribute:
+Key attributes are those attributes that can uniquely identify the entity in the entity set.
+Example: Roll-No is the key attribute because it can uniquely identify the student. 
+In ER diagram, the key attribute is represented by an oval with underlying lines.
+
+Atomic/simple Attribute:
+==>An attribute that cannot be divided into smaller independent attribute is known as atomic attribute.An attribute that cannot be further subdivided  is a simple attribute. 
+ex:The roll number of a student, the id number of an employee, age cannot be further divide.
+PRN NUMBER CANNOT BE DIVIDED AND STORED INTO DIFFERENT COLOUMN.
+---------------------------------------------------------
+Single-valued attribute : 
+The attribute which takes up only a single value for each entity  is a single-valued attribute.
+Example: The age of a student,votercard,blood group,price,quantity.
+-------------------------------------------------------------------------
+stored attribute:
+The stored attribute are such attributes which are already stored in the database and from which the value of another attribute is derived The stored attribute are those attribute which doesn’t require any type of further update since they are stored in the database..
+ex:HRA,DA can be derived from salary.
+age can be derived from DOB
+total marks or average marks of a student can be derived from marks. 
+=========================================================================
+Composite attribute : 
+An attribute that composed of many other attributes is known as a composite attribute. The composite attribute is represented by an ellipse, and those ellipses are connected with an ellipse.
+An attribute that can be split into components is a composite attribute. 
+
+Example: The address can be further split into house number, street number, city, state, country, and pin code, the name can also be split into first name middle name, and last name. 
+all attributes will be stored into different coloumn.spliting is done inorder to provide relevant data in relevant coloumn. because appropriate data should go in the appropriate coloumn.
+sampada piyush tarare
+sampada tarare piyush
+display all employee whose name is sampada
+
+{Address}
+{street,city,state,postal-code}
+
+{street}
+{street-number,street-name}
+
+==>In composite attributes,no of columns are fixed.
+--------------------------==================================================
+Multi-valued attribute : 
+The attribute which takes up more than a single value for each entity instance is a multi-valued attribute. 
+ In ER diagram, a multivalued attribute is represented by a double oval. 
+
+Example: Phone number of a student: Landline and mobile.
+a student can have more than one phone number. 
+hobbies attributes[reading,dancing,photography]
+Degree attribute[hindi,marathi,english]
+
+
+---------------------------------------------------------------
+Derived Attribute
+
+An attribute that can be derived from other attribute is known as a derived attribute. It can be represented by a dashed ellipse.Age (can be derived from DOB). In ER diagram, the derived attribute is represented by a dashed oval. 
+
+For example, A person's age changes over time and can be derived from another attribute like Date of birth.
+Example: Total and average marks of a student. 
+==============================================================================
+For example:  let us consider a person having multiple phone numbers, emails, and an address.
+
+Here, phone number and email are examples of multi-valued attributes and address is an example of the composite attribute, because it can be divided into house number, street, city, and state.
+==========================================================================================

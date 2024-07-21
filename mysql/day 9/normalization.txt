@@ -1,0 +1,88 @@
+what is Normalization?
+==>It is a technique which is used to organized data/information in multiple tables.
+
+						student_branch_details
+stid				sname					branch			hod 			officeno
+1021			smith						cse			mr x			999999
+1022			allen						cse			mr x			999999
+1023			ward						cse			mr x			999999
+1024			jones						cse			mr x			999999
+
+disadvantages
+==>to occur data redundancy
+==>memory wastage
+==>insertion problem
+==>updation problem(data inconsistency)
+==>deletion probem
+
+Normalization is a process of decomposing the relations into relations with fewer attributes.
+
+
+What is Normalization?
+
+    Normalization is the process of organizing the data in the database.
+    Normalization is used to minimize the redundancy from a relation or set of relations. It is also used to eliminate undesirable characteristics like Insertion, Update, and Deletion Anomalies.
+    Normalization divides the larger table into smaller and links them using relationships.
+    The normal form is used to reduce redundancy from the database table.
+
+===================================================================
+First Normal Form (1NF)
+
+
+==>    A relation will be 1NF if it contains an atomic value.
+ ==> It states that an attribute of a table cannot hold multiple values. It must hold only single-valued 	attribute.
+  ==>  First normal form disallows the multi-valued attribute, composite attribute, and their combinations.
+==>A col shld contain values that are of same datatype
+==>all columns in a table shld have unique name
+==>Each col should contain atomic values
+==>order in which data is stored doesnt matter
+
+
+second normal form(2NF)
+
+    In the 2NF, relational must be in 1NF.
+    In the second normal form, all non-key attributes are fully functional dependent on the primary key
+  i.e there should be no partial  dependency
+
+==>student table(studentid(pk),name,branch,address)
+all other col are depend on studentid---------->fully dependency
+
+==>when more than 1 col can act as a primarykey ex:in subject table (subject_id,subject_name) both represents primary key.
+==>to save marks obtained by students in each subject ,create score table
+==>score(score_id,student_id,subject_id,marks,teacher)
+student_id+subject_id======>pk
+problem is teacher col is only depend on subject_id and not on student_id which leads to partial dependency
+
+solution  is
+==>to remove teacher col from score table
+==>move teacher col to subject table
+
+====================================================
+3nf
+==>A relation will be in 3NF if it is in 2NF and not contain any transitive partial dependency.
+
+==>student table(studentid(pk),name,branch,address)
+==>subject(subject_id,subject_name,teacher)
+==>score(score_id,student_id,subject_id,marks)
+above all tables are in 2NF
+
+//save exam name and total marks in score table
+score(score_id,student_id,subject_id,marks,exam_name,total_marks)
+pk-->student_id+subject_id
+exam depends on student_id+subject_id
+total_marks depends on exam name(practical,mainexam)
+
+==>prob is total marks depends on exam_name which is not pk--->transitive dependency
+==>sol is take exam name and total marks in another table
+
+=========================================================
+
+==========================================================
+
+
+
+
+
+
+
+

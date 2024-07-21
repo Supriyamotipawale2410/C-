@@ -1,0 +1,1 @@
+https://www.geeksforgeeks.org/various-string-numeric-and-date-time-functions-in-mysql/
